@@ -185,3 +185,26 @@ th {
         width: 100%;
     }
 }
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.cancel-btn {
+    background: #6b7280;
+}
+
+.cancel-btn:hover {
+    background: #4b5563;
+}
+
+.edit-btn {
+    background: #f59e0b;
+    margin-right: 5px;
+}
+
+.edit-btn:hover {
+    background: #d97706;
+}

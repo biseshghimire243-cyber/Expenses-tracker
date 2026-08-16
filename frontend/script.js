@@ -9,10 +9,17 @@ const totalExpenses = document.getElementById("totalExpenses");
 const totalTransactions = document.getElementById("totalTransactions");
 const averageExpense = document.getElementById("averageExpense");
 
+const formTitle = document.getElementById("formTitle");
+const submitButton = document.getElementById("submitButton");
+const cancelButton = document.getElementById("cancelButton");
+
 let expenses = [];
+let editingExpenseId = null;
 
 
-/* Load Expenses */
+/* =========================
+   LOAD EXPENSES
+========================= */
 
 async function loadExpenses() {
 
@@ -39,7 +46,9 @@ async function loadExpenses() {
 }
 
 
-/* Display Expenses */
+/* =========================
+   DISPLAY EXPENSES
+========================= */
 
 function displayExpenses(data) {
 
@@ -59,22 +68,41 @@ function displayExpenses(data) {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>Rs. ${Number(expense.amount).toFixed(2)}</td>
-
-            <td>${expense.category}</td>
-
-            <td>${expense.description || "-"}</td>
-
-            <td>${expense.expense_date}</td>
 
             <td>
+                Rs. ${Number(expense.amount).toFixed(2)}
+            </td>
+
+            <td>
+                ${expense.category}
+            </td>
+
+            <td>
+                ${expense.description || "-"}
+            </td>
+
+            <td>
+                ${expense.expense_date}
+            </td>
+
+            <td>
+
+                <button
+                    class="edit-btn"
+                    onclick="editExpense(${expense.id})"
+                >
+                    ✏️ Edit
+                </button>
+
                 <button
                     class="delete-btn"
                     onclick="deleteExpense(${expense.id})"
                 >
                     🗑️ Delete
                 </button>
+
             </td>
+
         `;
 
         expenseTableBody.appendChild(row);
@@ -82,18 +110,28 @@ function displayExpenses(data) {
 }
 
 
-/* Add Expense */
+/* =========================
+   ADD / UPDATE EXPENSE
+========================= */
 
 expenseForm.addEventListener("submit", async function(event) {
 
     event.preventDefault();
 
-    const amount = document.getElementById("amount").value;
-    const category = document.getElementById("category").value;
-    const description = document.getElementById("description").value;
-    const expenseDate = document.getElementById("expenseDate").value;
+    const amount =
+        document.getElementById("amount").value;
 
-    const expense = {
+    const category =
+        document.getElementById("category").value;
+
+    const description =
+        document.getElementById("description").value;
+
+    const expenseDate =
+        document.getElementById("expenseDate").value;
+
+
+    const expenseData = {
 
         amount: Number(amount),
 
@@ -107,55 +145,198 @@ expenseForm.addEventListener("submit", async function(event) {
 
     try {
 
-        const response = await fetch(API_URL, {
+        let response;
 
-            method: "POST",
+        /* UPDATE */
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+        if (editingExpenseId !== null) {
 
-            body: JSON.stringify(expense)
-        });
+            response = await fetch(
+                `${API_URL}/${editingExpenseId}`,
+                {
+                    method: "PUT",
 
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-        if (!response.ok) {
+                    body: JSON.stringify(expenseData)
+                }
+            );
 
-            throw new Error("Failed to add expense");
+        }
+
+        /* ADD */
+
+        else {
+
+            response = await fetch(
+                API_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(expenseData)
+                }
+            );
 
         }
 
 
-        alert("Expense added successfully! 💰");
+        if (!response.ok) {
 
-        expenseForm.reset();
+            throw new Error(
+                "Failed to save expense"
+            );
 
-        setTodayDate();
+        }
 
-        loadExpenses();
+
+        if (editingExpenseId !== null) {
+
+            alert(
+                "Expense updated successfully! ✏️"
+            );
+
+        } else {
+
+            alert(
+                "Expense added successfully! 💰"
+            );
+
+        }
+
+
+        resetForm();
+
+        await loadExpenses();
 
 
     } catch (error) {
 
         console.error(error);
 
-        alert("Unable to add expense.");
+        alert(
+            "Unable to save expense."
+        );
 
     }
 
 });
 
 
-/* Delete Expense */
+/* =========================
+   EDIT EXPENSE
+========================= */
+
+function editExpense(id) {
+
+    const expense = expenses.find(
+        expense => expense.id === id
+    );
+
+
+    if (!expense) {
+
+        alert("Expense not found.");
+
+        return;
+    }
+
+
+    editingExpenseId = id;
+
+
+    document.getElementById("amount").value =
+        expense.amount;
+
+    document.getElementById("category").value =
+        expense.category;
+
+    document.getElementById("description").value =
+        expense.description || "";
+
+    document.getElementById("expenseDate").value =
+        expense.expense_date;
+
+
+    formTitle.textContent =
+        "✏️ Edit Expense";
+
+    submitButton.textContent =
+        "💾 Update Expense";
+
+    cancelButton.style.display =
+        "inline-block";
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================
+   CANCEL EDIT
+========================= */
+
+cancelButton.addEventListener(
+    "click",
+    function() {
+
+        resetForm();
+
+    }
+);
+
+
+/* =========================
+   RESET FORM
+========================= */
+
+function resetForm() {
+
+    expenseForm.reset();
+
+    editingExpenseId = null;
+
+
+    formTitle.textContent =
+        "Add New Expense";
+
+    submitButton.textContent =
+        "➕ Add Expense";
+
+    cancelButton.style.display =
+        "none";
+
+
+    setTodayDate();
+
+}
+
+
+/* =========================
+   DELETE EXPENSE
+========================= */
 
 async function deleteExpense(id) {
 
-    const confirmDelete = confirm(
-        "Are you sure you want to delete this expense?"
-    );
+    const confirmDelete =
+        confirm(
+            "Are you sure you want to delete this expense?"
+        );
+
 
     if (!confirmDelete) {
+
         return;
+
     }
 
 
@@ -171,97 +352,140 @@ async function deleteExpense(id) {
 
         if (!response.ok) {
 
-            throw new Error("Failed to delete expense");
+            throw new Error(
+                "Failed to delete expense"
+            );
 
         }
 
 
-        alert("Expense deleted successfully!");
+        alert(
+            "Expense deleted successfully! 🗑️"
+        );
 
-        loadExpenses();
+
+        await loadExpenses();
 
 
     } catch (error) {
 
         console.error(error);
 
-        alert("Unable to delete expense.");
+        alert(
+            "Unable to delete expense."
+        );
 
     }
 
 }
 
 
-/* Update Summary */
+/* =========================
+   UPDATE SUMMARY
+========================= */
 
 function updateSummary() {
 
-    const total = expenses.reduce(
-        (sum, expense) => sum + Number(expense.amount),
-        0
-    );
+    const total =
+        expenses.reduce(
+            (sum, expense) =>
+                sum + Number(expense.amount),
+            0
+        );
 
-    const count = expenses.length;
 
-    const average = count > 0
-        ? total / count
-        : 0;
+    const count =
+        expenses.length;
+
+
+    const average =
+        count > 0
+            ? total / count
+            : 0;
 
 
     totalExpenses.textContent =
         `Rs. ${total.toFixed(2)}`;
 
+
     totalTransactions.textContent =
         count;
 
+
     averageExpense.textContent =
         `Rs. ${average.toFixed(2)}`;
+
 }
 
 
-/* Search */
+/* =========================
+   SEARCH
+========================= */
 
-searchInput.addEventListener("input", function() {
+searchInput.addEventListener(
+    "input",
+    function() {
 
-    const searchTerm =
-        searchInput.value.toLowerCase();
+        const searchTerm =
+            searchInput.value.toLowerCase();
 
 
-    const filteredExpenses = expenses.filter(expense => {
+        const filteredExpenses =
+            expenses.filter(expense => {
 
-        return (
-            expense.category.toLowerCase().includes(searchTerm) ||
+                return (
 
-            (expense.description || "")
-                .toLowerCase()
-                .includes(searchTerm) ||
+                    expense.category
+                        .toLowerCase()
+                        .includes(searchTerm)
 
-            expense.expense_date
-                .toLowerCase()
-                .includes(searchTerm)
+                    ||
+
+                    (expense.description || "")
+                        .toLowerCase()
+                        .includes(searchTerm)
+
+                    ||
+
+                    expense.expense_date
+                        .toLowerCase()
+                        .includes(searchTerm)
+
+                );
+
+            });
+
+
+        displayExpenses(
+            filteredExpenses
         );
 
-    });
+    }
+);
 
 
-    displayExpenses(filteredExpenses);
-
-});
-
-
-/* Today's Date */
+/* =========================
+   TODAY'S DATE
+========================= */
 
 function setTodayDate() {
 
     const today =
-        new Date().toISOString().split("T")[0];
+        new Date()
+            .toISOString()
+            .split("T")[0];
 
-    document.getElementById("expenseDate").value =
-        today;
+
+    document.getElementById(
+        "expenseDate"
+    ).value = today;
+
 }
 
 
-/* Start Application */
+/* =========================
+   START APPLICATION
+========================= */
 
 setTodayDate();
 
