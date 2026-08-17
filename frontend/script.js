@@ -22,17 +22,17 @@ const monthFilter =
 const clearFilters =
     document.getElementById("clearFilters");
 
-let expenses = [];
-let editingExpenseId = null;
-
-let categoryChart = null;
-let monthlyChart = null;
-
 const highestCategory =
     document.getElementById("highestCategory");
 
 const highestExpense =
     document.getElementById("highestExpense");
+
+let expenses = [];
+let editingExpenseId = null;
+
+let categoryChart = null;
+let monthlyChart = null;
 
 
 /* =========================
@@ -52,13 +52,18 @@ async function loadExpenses() {
         expenses = await response.json();
 
         displayExpenses(expenses);
+
         updateSummary();
+
+        updateAnalytics(expenses);
 
     } catch (error) {
 
         console.error(error);
 
-        alert("Unable to connect to the Python server.");
+        alert(
+            "Unable to connect to the Python server."
+        );
 
     }
 }
@@ -83,7 +88,9 @@ function displayExpenses(data) {
 
     data.forEach(expense => {
 
-        const row = document.createElement("tr");
+        const row =
+            document.createElement("tr");
+
 
         row.innerHTML = `
 
@@ -123,6 +130,7 @@ function displayExpenses(data) {
 
         `;
 
+
         expenseTableBody.appendChild(row);
 
     });
@@ -139,6 +147,7 @@ expenseForm.addEventListener(
     async function(event) {
 
         event.preventDefault();
+
 
         const amount =
             document.getElementById("amount").value;
@@ -171,9 +180,7 @@ expenseForm.addEventListener(
             let response;
 
 
-            /* =========================
-               UPDATE EXISTING EXPENSE
-            ========================= */
+            /* UPDATE */
 
             if (editingExpenseId !== null) {
 
@@ -184,10 +191,14 @@ expenseForm.addEventListener(
                         method: "PUT",
 
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type":
+                                "application/json"
                         },
 
-                        body: JSON.stringify(expenseData)
+                        body:
+                            JSON.stringify(
+                                expenseData
+                            )
 
                     }
                 );
@@ -195,9 +206,7 @@ expenseForm.addEventListener(
             }
 
 
-            /* =========================
-               ADD NEW EXPENSE
-            ========================= */
+            /* ADD */
 
             else {
 
@@ -208,10 +217,14 @@ expenseForm.addEventListener(
                         method: "POST",
 
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type":
+                                "application/json"
                         },
 
-                        body: JSON.stringify(expenseData)
+                        body:
+                            JSON.stringify(
+                                expenseData
+                            )
 
                     }
                 );
@@ -288,19 +301,25 @@ function editExpense(id) {
     editingExpenseId = id;
 
 
-    document.getElementById("amount").value =
-        expense.amount;
+    document.getElementById(
+        "amount"
+    ).value = expense.amount;
 
 
-    document.getElementById("category").value =
-        expense.category;
+    document.getElementById(
+        "category"
+    ).value = expense.category;
 
 
-    document.getElementById("description").value =
+    document.getElementById(
+        "description"
+    ).value =
         expense.description || "";
 
 
-    document.getElementById("expenseDate").value =
+    document.getElementById(
+        "expenseDate"
+    ).value =
         expense.expense_date;
 
 
@@ -415,7 +434,6 @@ async function deleteExpense(id) {
 
         await loadExpenses();
 
-
     }
 
 
@@ -482,7 +500,7 @@ function updateFilteredSummary(data) {
 
 
 /* =========================
-   SEARCH + FILTER
+   SEARCH + FILTERS
 ========================= */
 
 function applyFilters() {
@@ -505,9 +523,7 @@ function applyFilters() {
         expenses.filter(expense => {
 
 
-            /* =========================
-               SEARCH
-            ========================= */
+            /* SEARCH */
 
             const matchesSearch =
 
@@ -528,9 +544,7 @@ function applyFilters() {
                     .includes(searchTerm);
 
 
-            /* =========================
-               CATEGORY
-            ========================= */
+            /* CATEGORY */
 
             const matchesCategory =
 
@@ -539,12 +553,10 @@ function applyFilters() {
                 ||
 
                 expense.category ===
-                selectedCategory;
+                    selectedCategory;
 
 
-            /* =========================
-               MONTH
-            ========================= */
+            /* MONTH */
 
             const matchesMonth =
 
@@ -569,9 +581,19 @@ function applyFilters() {
         });
 
 
-    displayExpenses(filteredExpenses);
+    displayExpenses(
+        filteredExpenses
+    );
 
-    updateFilteredSummary(filteredExpenses);
+
+    updateFilteredSummary(
+        filteredExpenses
+    );
+
+
+    updateAnalytics(
+        filteredExpenses
+    );
 
 }
 
@@ -587,7 +609,7 @@ searchInput.addEventListener(
 
 
 /* =========================
-   CATEGORY EVENT
+   CATEGORY FILTER
 ========================= */
 
 categoryFilter.addEventListener(
@@ -597,7 +619,7 @@ categoryFilter.addEventListener(
 
 
 /* =========================
-   MONTH EVENT
+   MONTH FILTER
 ========================= */
 
 monthFilter.addEventListener(
@@ -621,12 +643,338 @@ clearFilters.addEventListener(
         monthFilter.value = "";
 
 
-        displayExpenses(expenses);
+        displayExpenses(
+            expenses
+        );
+
 
         updateSummary();
 
+
+        updateAnalytics(
+            expenses
+        );
+
     }
 );
+
+
+/* =========================
+   EXPENSE ANALYTICS
+========================= */
+
+function updateAnalytics(data) {
+
+
+    /* =========================
+       CATEGORY TOTALS
+    ========================= */
+
+    const categoryTotals = {};
+
+
+    data.forEach(expense => {
+
+        const category =
+            expense.category;
+
+
+        const amount =
+            Number(expense.amount);
+
+
+        if (!categoryTotals[category]) {
+
+            categoryTotals[category] =
+                0;
+
+        }
+
+
+        categoryTotals[category] +=
+            amount;
+
+    });
+
+
+    /* =========================
+       HIGHEST CATEGORY
+    ========================= */
+
+    const categoryEntries =
+        Object.entries(
+            categoryTotals
+        );
+
+
+    if (categoryEntries.length > 0) {
+
+        const highest =
+            categoryEntries.reduce(
+                (max, current) => {
+
+                    return current[1] >
+                        max[1]
+                        ? current
+                        : max;
+
+                }
+            );
+
+
+        highestCategory.textContent =
+            `${highest[0]} — Rs. ${highest[1].toFixed(2)}`;
+
+    }
+
+    else {
+
+        highestCategory.textContent =
+            "-";
+
+    }
+
+
+    /* =========================
+       HIGHEST SINGLE EXPENSE
+    ========================= */
+
+    if (data.length > 0) {
+
+        const highest =
+            data.reduce(
+                (max, current) => {
+
+                    return Number(
+                        current.amount
+                    ) >
+
+                    Number(
+                        max.amount
+                    )
+
+                        ? current
+                        : max;
+
+                }
+            );
+
+
+        highestExpense.textContent =
+            `Rs. ${Number(
+                highest.amount
+            ).toFixed(2)} (${highest.category})`;
+
+    }
+
+    else {
+
+        highestExpense.textContent =
+            "Rs. 0.00";
+
+    }
+
+
+    /* =========================
+       CATEGORY CHART
+    ========================= */
+
+    const categoryLabels =
+        Object.keys(
+            categoryTotals
+        );
+
+
+    const categoryValues =
+        Object.values(
+            categoryTotals
+        );
+
+
+    if (categoryChart) {
+
+        categoryChart.destroy();
+
+    }
+
+
+    const categoryCanvas =
+        document.getElementById(
+            "categoryChart"
+        );
+
+
+    if (
+        categoryCanvas &&
+        typeof Chart !== "undefined"
+    ) {
+
+        categoryChart =
+            new Chart(
+                categoryCanvas,
+                {
+
+                    type: "doughnut",
+
+                    data: {
+
+                        labels:
+                            categoryLabels,
+
+                        datasets: [
+
+                            {
+
+                                data:
+                                    categoryValues
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        plugins: {
+
+                            legend: {
+
+                                position:
+                                    "bottom"
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /* =========================
+       MONTHLY TOTALS
+    ========================= */
+
+    const monthlyTotals = {};
+
+
+    data.forEach(expense => {
+
+        const month =
+            expense.expense_date
+                .substring(0, 7);
+
+
+        const amount =
+            Number(expense.amount);
+
+
+        if (!monthlyTotals[month]) {
+
+            monthlyTotals[month] =
+                0;
+
+        }
+
+
+        monthlyTotals[month] +=
+            amount;
+
+    });
+
+
+    const monthlyLabels =
+        Object.keys(
+            monthlyTotals
+        ).sort();
+
+
+    const monthlyValues =
+        monthlyLabels.map(
+            month =>
+                monthlyTotals[month]
+        );
+
+
+    /* =========================
+       MONTHLY CHART
+    ========================= */
+
+    if (monthlyChart) {
+
+        monthlyChart.destroy();
+
+    }
+
+
+    const monthlyCanvas =
+        document.getElementById(
+            "monthlyChart"
+        );
+
+
+    if (
+        monthlyCanvas &&
+        typeof Chart !== "undefined"
+    ) {
+
+        monthlyChart =
+            new Chart(
+                monthlyCanvas,
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels:
+                            monthlyLabels,
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    "Monthly Expenses",
+
+                                data:
+                                    monthlyValues
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero:
+                                    true
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+    }
+
+}
 
 
 /* =========================
