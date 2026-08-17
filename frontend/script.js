@@ -28,11 +28,51 @@ const highestCategory =
 const highestExpense =
     document.getElementById("highestExpense");
 
+
+/* =========================
+   BUDGET ELEMENTS
+========================= */
+
+const budgetInput =
+    document.getElementById("budgetInput");
+
+const setBudgetButton =
+    document.getElementById("setBudgetButton");
+
+const budgetAmount =
+    document.getElementById("budgetAmount");
+
+const budgetSpent =
+    document.getElementById("budgetSpent");
+
+const budgetRemaining =
+    document.getElementById("budgetRemaining");
+
+const budgetPercentage =
+    document.getElementById("budgetPercentage");
+
+const budgetProgress =
+    document.getElementById("budgetProgress");
+
+const budgetMessage =
+    document.getElementById("budgetMessage");
+
+
 let expenses = [];
 let editingExpenseId = null;
 
 let categoryChart = null;
 let monthlyChart = null;
+
+
+/* =========================
+   MONTHLY BUDGET
+========================= */
+
+let monthlyBudget =
+    Number(
+        localStorage.getItem("monthlyBudget")
+    ) || 0;
 
 
 /* =========================
@@ -43,19 +83,31 @@ async function loadExpenses() {
 
     try {
 
-        const response = await fetch(API_URL);
+        const response =
+            await fetch(API_URL);
+
 
         if (!response.ok) {
-            throw new Error("Failed to load expenses");
+
+            throw new Error(
+                "Failed to load expenses"
+            );
+
         }
 
-        expenses = await response.json();
+
+        expenses =
+            await response.json();
+
 
         displayExpenses(expenses);
 
         updateSummary();
 
         updateAnalytics(expenses);
+
+        updateBudget();
+
 
     } catch (error) {
 
@@ -66,6 +118,7 @@ async function loadExpenses() {
         );
 
     }
+
 }
 
 
@@ -77,14 +130,20 @@ function displayExpenses(data) {
 
     expenseTableBody.innerHTML = "";
 
+
     if (data.length === 0) {
 
-        noExpenses.style.display = "block";
+        noExpenses.style.display =
+            "block";
 
         return;
+
     }
 
-    noExpenses.style.display = "none";
+
+    noExpenses.style.display =
+        "none";
+
 
     data.forEach(expense => {
 
@@ -95,7 +154,9 @@ function displayExpenses(data) {
         row.innerHTML = `
 
             <td>
-                Rs. ${Number(expense.amount).toFixed(2)}
+                Rs. ${Number(
+                    expense.amount
+                ).toFixed(2)}
             </td>
 
             <td>
@@ -150,27 +211,42 @@ expenseForm.addEventListener(
 
 
         const amount =
-            document.getElementById("amount").value;
+            document.getElementById(
+                "amount"
+            ).value;
+
 
         const category =
-            document.getElementById("category").value;
+            document.getElementById(
+                "category"
+            ).value;
+
 
         const description =
-            document.getElementById("description").value;
+            document.getElementById(
+                "description"
+            ).value;
+
 
         const expenseDate =
-            document.getElementById("expenseDate").value;
+            document.getElementById(
+                "expenseDate"
+            ).value;
 
 
         const expenseData = {
 
-            amount: Number(amount),
+            amount:
+                Number(amount),
 
-            category: category,
+            category:
+                category,
 
-            description: description,
+            description:
+                description,
 
-            expense_date: expenseDate
+            expense_date:
+                expenseDate
 
         };
 
@@ -182,26 +258,29 @@ expenseForm.addEventListener(
 
             /* UPDATE */
 
-            if (editingExpenseId !== null) {
+            if (
+                editingExpenseId !== null
+            ) {
 
-                response = await fetch(
-                    `${API_URL}/${editingExpenseId}`,
-                    {
+                response =
+                    await fetch(
+                        `${API_URL}/${editingExpenseId}`,
+                        {
 
-                        method: "PUT",
+                            method: "PUT",
 
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-                        body:
-                            JSON.stringify(
-                                expenseData
-                            )
+                            body:
+                                JSON.stringify(
+                                    expenseData
+                                )
 
-                    }
-                );
+                        }
+                    );
 
             }
 
@@ -210,24 +289,25 @@ expenseForm.addEventListener(
 
             else {
 
-                response = await fetch(
-                    API_URL,
-                    {
+                response =
+                    await fetch(
+                        API_URL,
+                        {
 
-                        method: "POST",
+                            method: "POST",
 
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-                        body:
-                            JSON.stringify(
-                                expenseData
-                            )
+                            body:
+                                JSON.stringify(
+                                    expenseData
+                                )
 
-                    }
-                );
+                        }
+                    );
 
             }
 
@@ -241,7 +321,9 @@ expenseForm.addEventListener(
             }
 
 
-            if (editingExpenseId !== null) {
+            if (
+                editingExpenseId !== null
+            ) {
 
                 alert(
                     "Expense updated successfully! ✏️"
@@ -260,10 +342,8 @@ expenseForm.addEventListener(
 
             await loadExpenses();
 
-        }
 
-
-        catch (error) {
+        } catch (error) {
 
             console.error(error);
 
@@ -285,13 +365,16 @@ function editExpense(id) {
 
     const expense =
         expenses.find(
-            expense => expense.id === id
+            expense =>
+                expense.id === id
         );
 
 
     if (!expense) {
 
-        alert("Expense not found.");
+        alert(
+            "Expense not found."
+        );
 
         return;
 
@@ -303,12 +386,14 @@ function editExpense(id) {
 
     document.getElementById(
         "amount"
-    ).value = expense.amount;
+    ).value =
+        expense.amount;
 
 
     document.getElementById(
         "category"
-    ).value = expense.category;
+    ).value =
+        expense.category;
 
 
     document.getElementById(
@@ -434,10 +519,8 @@ async function deleteExpense(id) {
 
         await loadExpenses();
 
-    }
 
-
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
 
@@ -456,7 +539,9 @@ async function deleteExpense(id) {
 
 function updateSummary() {
 
-    updateFilteredSummary(expenses);
+    updateFilteredSummary(
+        expenses
+    );
 
 }
 
@@ -470,7 +555,10 @@ function updateFilteredSummary(data) {
     const total =
         data.reduce(
             (sum, expense) =>
-                sum + Number(expense.amount),
+                sum +
+                Number(
+                    expense.amount
+                ),
             0
         );
 
@@ -520,65 +608,78 @@ function applyFilters() {
 
 
     const filteredExpenses =
-        expenses.filter(expense => {
+        expenses.filter(
+            expense => {
 
 
-            /* SEARCH */
+                /* SEARCH */
 
-            const matchesSearch =
+                const matchesSearch =
 
-                expense.category
-                    .toLowerCase()
-                    .includes(searchTerm)
+                    expense.category
+                        .toLowerCase()
+                        .includes(
+                            searchTerm
+                        )
 
-                ||
+                    ||
 
-                (expense.description || "")
-                    .toLowerCase()
-                    .includes(searchTerm)
+                    (
+                        expense.description ||
+                        ""
+                    )
+                        .toLowerCase()
+                        .includes(
+                            searchTerm
+                        )
 
-                ||
+                    ||
 
-                expense.expense_date
-                    .toLowerCase()
-                    .includes(searchTerm);
-
-
-            /* CATEGORY */
-
-            const matchesCategory =
-
-                selectedCategory === ""
-
-                ||
-
-                expense.category ===
-                    selectedCategory;
+                    expense.expense_date
+                        .toLowerCase()
+                        .includes(
+                            searchTerm
+                        );
 
 
-            /* MONTH */
+                /* CATEGORY */
 
-            const matchesMonth =
+                const matchesCategory =
 
-                selectedMonth === ""
+                    selectedCategory === ""
 
-                ||
+                    ||
 
-                expense.expense_date
-                    .startsWith(selectedMonth);
+                    expense.category ===
+                        selectedCategory;
 
 
-            return (
+                /* MONTH */
 
-                matchesSearch &&
+                const matchesMonth =
 
-                matchesCategory &&
+                    selectedMonth === ""
 
-                matchesMonth
+                    ||
 
-            );
+                    expense.expense_date
+                        .startsWith(
+                            selectedMonth
+                        );
 
-        });
+
+                return (
+
+                    matchesSearch &&
+
+                    matchesCategory &&
+
+                    matchesMonth
+
+                );
+
+            }
+        );
 
 
     displayExpenses(
@@ -636,11 +737,14 @@ clearFilters.addEventListener(
     "click",
     function() {
 
-        searchInput.value = "";
+        searchInput.value =
+            "";
 
-        categoryFilter.value = "";
+        categoryFilter.value =
+            "";
 
-        monthFilter.value = "";
+        monthFilter.value =
+            "";
 
 
         displayExpenses(
@@ -665,7 +769,6 @@ clearFilters.addEventListener(
 
 function updateAnalytics(data) {
 
-
     /* =========================
        CATEGORY TOTALS
     ========================= */
@@ -680,7 +783,9 @@ function updateAnalytics(data) {
 
 
         const amount =
-            Number(expense.amount);
+            Number(
+                expense.amount
+            );
 
 
         if (!categoryTotals[category]) {
@@ -707,7 +812,9 @@ function updateAnalytics(data) {
         );
 
 
-    if (categoryEntries.length > 0) {
+    if (
+        categoryEntries.length > 0
+    ) {
 
         const highest =
             categoryEntries.reduce(
@@ -725,9 +832,7 @@ function updateAnalytics(data) {
         highestCategory.textContent =
             `${highest[0]} — Rs. ${highest[1].toFixed(2)}`;
 
-    }
-
-    else {
+    } else {
 
         highestCategory.textContent =
             "-";
@@ -748,11 +853,9 @@ function updateAnalytics(data) {
                     return Number(
                         current.amount
                     ) >
-
                     Number(
                         max.amount
                     )
-
                         ? current
                         : max;
 
@@ -765,9 +868,7 @@ function updateAnalytics(data) {
                 highest.amount
             ).toFixed(2)} (${highest.category})`;
 
-    }
-
-    else {
+    } else {
 
         highestExpense.textContent =
             "Rs. 0.00";
@@ -814,7 +915,8 @@ function updateAnalytics(data) {
                 categoryCanvas,
                 {
 
-                    type: "doughnut",
+                    type:
+                        "doughnut",
 
                     data: {
 
@@ -836,7 +938,8 @@ function updateAnalytics(data) {
 
                     options: {
 
-                        responsive: true,
+                        responsive:
+                            true,
 
                         plugins: {
 
@@ -868,11 +971,16 @@ function updateAnalytics(data) {
 
         const month =
             expense.expense_date
-                .substring(0, 7);
+                .substring(
+                    0,
+                    7
+                );
 
 
         const amount =
-            Number(expense.amount);
+            Number(
+                expense.amount
+            );
 
 
         if (!monthlyTotals[month]) {
@@ -929,7 +1037,8 @@ function updateAnalytics(data) {
                 monthlyCanvas,
                 {
 
-                    type: "bar",
+                    type:
+                        "bar",
 
                     data: {
 
@@ -954,7 +1063,8 @@ function updateAnalytics(data) {
 
                     options: {
 
-                        responsive: true,
+                        responsive:
+                            true,
 
                         scales: {
 
@@ -978,6 +1088,186 @@ function updateAnalytics(data) {
 
 
 /* =========================
+   BUDGET MANAGEMENT
+========================= */
+
+function updateBudget() {
+
+    const currentMonth =
+        new Date()
+            .toISOString()
+            .substring(
+                0,
+                7
+            );
+
+
+    const monthlyExpenses =
+        expenses.filter(
+            expense =>
+                expense.expense_date
+                    .startsWith(
+                        currentMonth
+                    )
+        );
+
+
+    const spent =
+        monthlyExpenses.reduce(
+            (sum, expense) =>
+                sum +
+                Number(
+                    expense.amount
+                ),
+            0
+        );
+
+
+    const remaining =
+        monthlyBudget -
+        spent;
+
+
+    let percentage = 0;
+
+
+    if (monthlyBudget > 0) {
+
+        percentage =
+            (
+                spent /
+                monthlyBudget
+            ) * 100;
+
+    }
+
+
+    const displayPercentage =
+        Math.min(
+            percentage,
+            100
+        );
+
+
+    budgetAmount.textContent =
+        `Rs. ${monthlyBudget.toFixed(2)}`;
+
+
+    budgetSpent.textContent =
+        `Rs. ${spent.toFixed(2)}`;
+
+
+    budgetRemaining.textContent =
+        `Rs. ${remaining.toFixed(2)}`;
+
+
+    budgetPercentage.textContent =
+        `${percentage.toFixed(1)}%`;
+
+
+    budgetProgress.style.width =
+        `${displayPercentage}%`;
+
+
+    /* =========================
+       BUDGET MESSAGE
+    ========================= */
+
+    if (
+        monthlyBudget === 0
+    ) {
+
+        budgetMessage.textContent =
+            "Set a monthly budget to start tracking.";
+
+    }
+
+    else if (
+        spent > monthlyBudget
+    ) {
+
+        budgetMessage.textContent =
+            "⚠️ You have exceeded your monthly budget.";
+
+    }
+
+    else if (
+        percentage >= 80
+    ) {
+
+        budgetMessage.textContent =
+            "⚠️ You are close to your monthly budget.";
+
+    }
+
+    else {
+
+        budgetMessage.textContent =
+            "✅ You are within your monthly budget.";
+
+    }
+
+}
+
+
+/* =========================
+   SET BUDGET
+========================= */
+
+if (setBudgetButton) {
+
+    setBudgetButton.addEventListener(
+        "click",
+        function() {
+
+            const value =
+                Number(
+                    budgetInput.value
+                );
+
+
+            if (
+                !value ||
+                value <= 0
+            ) {
+
+                alert(
+                    "Please enter a valid budget amount."
+                );
+
+                return;
+
+            }
+
+
+            monthlyBudget =
+                value;
+
+
+            localStorage.setItem(
+                "monthlyBudget",
+                monthlyBudget
+            );
+
+
+            budgetInput.value =
+                "";
+
+
+            updateBudget();
+
+
+            alert(
+                "Monthly budget saved successfully! 💰"
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================
    TODAY'S DATE
 ========================= */
 
@@ -991,7 +1281,8 @@ function setTodayDate() {
 
     document.getElementById(
         "expenseDate"
-    ).value = today;
+    ).value =
+        today;
 
 }
 

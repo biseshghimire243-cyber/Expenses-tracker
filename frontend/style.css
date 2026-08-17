@@ -311,3 +311,120 @@ th {
     }
 
 }
+
+
+/* =========================
+   BUDGET SECTION
+========================= */
+
+.budget-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.budget-header {
+    margin-bottom: 20px;
+}
+
+.budget-header h2 {
+    margin-bottom: 5px;
+}
+
+.budget-header p {
+    color: #6b7280;
+}
+
+.budget-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.budget-form input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.budget-form button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #2563eb;
+    color: white;
+    font-weight: bold;
+}
+
+.budget-info {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.budget-card {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.budget-card h3 {
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.budget-card p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.budget-progress {
+    margin-top: 25px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 15px;
+    background: #e5e7eb;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
+
+.budget-message {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+
+    .budget-form {
+        flex-direction: column;
+    }
+
+    .budget-info {
+        grid-template-columns: 1fr 1fr;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .budget-info {
+        grid-template-columns: 1fr;
+    }
+
+}
