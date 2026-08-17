@@ -25,6 +25,15 @@ const clearFilters =
 let expenses = [];
 let editingExpenseId = null;
 
+let categoryChart = null;
+let monthlyChart = null;
+
+const highestCategory =
+    document.getElementById("highestCategory");
+
+const highestExpense =
+    document.getElementById("highestExpense");
+
 
 /* =========================
    LOAD EXPENSES

@@ -115,6 +115,40 @@
 
 </section>
 
+<section class="analytics">
+
+    <h2>📊 Expense Analytics</h2>
+
+    <div class="analytics-grid">
+
+        <div class="analytics-card">
+            <h3>Category Spending</h3>
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+        <div class="analytics-card">
+            <h3>Monthly Spending</h3>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+
+    </div>
+
+    <div class="insights">
+
+        <div class="insight-card">
+            <h3>🏆 Highest Category</h3>
+            <p id="highestCategory">-</p>
+        </div>
+
+        <div class="insight-card">
+            <h3>💸 Highest Expense</h3>
+            <p id="highestExpense">Rs. 0.00</p>
+        </div>
+
+    </div>
+
+</section>
+
         <!-- Expense List -->
         <section class="expense-list">
 
@@ -185,6 +219,8 @@
         </section>
 
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="script.js"></script>
 
