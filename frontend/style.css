@@ -208,3 +208,40 @@ th {
 .edit-btn:hover {
     background: #d97706;
 }
+
+.filters {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filters input,
+.filters select {
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.clear-btn {
+    background: #6b7280;
+}
+
+.clear-btn:hover {
+    background: #4b5563;
+}
+
+@media (max-width: 768px) {
+
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters input,
+    .filters select,
+    .clear-btn {
+        width: 100%;
+    }
+}

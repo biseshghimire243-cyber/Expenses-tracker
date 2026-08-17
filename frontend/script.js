@@ -13,6 +13,15 @@ const formTitle = document.getElementById("formTitle");
 const submitButton = document.getElementById("submitButton");
 const cancelButton = document.getElementById("cancelButton");
 
+const categoryFilter =
+    document.getElementById("categoryFilter");
+
+const monthFilter =
+    document.getElementById("monthFilter");
+
+const clearFilters =
+    document.getElementById("clearFilters");
+
 let expenses = [];
 let editingExpenseId = null;
 
@@ -106,7 +115,9 @@ function displayExpenses(data) {
         `;
 
         expenseTableBody.appendChild(row);
+
     });
+
 }
 
 
@@ -114,118 +125,134 @@ function displayExpenses(data) {
    ADD / UPDATE EXPENSE
 ========================= */
 
-expenseForm.addEventListener("submit", async function(event) {
+expenseForm.addEventListener(
+    "submit",
+    async function(event) {
 
-    event.preventDefault();
+        event.preventDefault();
 
-    const amount =
-        document.getElementById("amount").value;
+        const amount =
+            document.getElementById("amount").value;
 
-    const category =
-        document.getElementById("category").value;
+        const category =
+            document.getElementById("category").value;
 
-    const description =
-        document.getElementById("description").value;
+        const description =
+            document.getElementById("description").value;
 
-    const expenseDate =
-        document.getElementById("expenseDate").value;
-
-
-    const expenseData = {
-
-        amount: Number(amount),
-
-        category: category,
-
-        description: description,
-
-        expense_date: expenseDate
-    };
+        const expenseDate =
+            document.getElementById("expenseDate").value;
 
 
-    try {
+        const expenseData = {
 
-        let response;
+            amount: Number(amount),
 
-        /* UPDATE */
+            category: category,
 
-        if (editingExpenseId !== null) {
+            description: description,
 
-            response = await fetch(
-                `${API_URL}/${editingExpenseId}`,
-                {
-                    method: "PUT",
+            expense_date: expenseDate
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+        };
 
-                    body: JSON.stringify(expenseData)
-                }
-            );
+
+        try {
+
+            let response;
+
+
+            /* =========================
+               UPDATE EXISTING EXPENSE
+            ========================= */
+
+            if (editingExpenseId !== null) {
+
+                response = await fetch(
+                    `${API_URL}/${editingExpenseId}`,
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(expenseData)
+
+                    }
+                );
+
+            }
+
+
+            /* =========================
+               ADD NEW EXPENSE
+            ========================= */
+
+            else {
+
+                response = await fetch(
+                    API_URL,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(expenseData)
+
+                    }
+                );
+
+            }
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Failed to save expense"
+                );
+
+            }
+
+
+            if (editingExpenseId !== null) {
+
+                alert(
+                    "Expense updated successfully! ✏️"
+                );
+
+            } else {
+
+                alert(
+                    "Expense added successfully! 💰"
+                );
+
+            }
+
+
+            resetForm();
+
+            await loadExpenses();
 
         }
 
-        /* ADD */
 
-        else {
+        catch (error) {
 
-            response = await fetch(
-                API_URL,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(expenseData)
-                }
-            );
-
-        }
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Failed to save expense"
-            );
-
-        }
-
-
-        if (editingExpenseId !== null) {
+            console.error(error);
 
             alert(
-                "Expense updated successfully! ✏️"
-            );
-
-        } else {
-
-            alert(
-                "Expense added successfully! 💰"
+                "Unable to save expense."
             );
 
         }
-
-
-        resetForm();
-
-        await loadExpenses();
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "Unable to save expense."
-        );
 
     }
-
-});
+);
 
 
 /* =========================
@@ -234,9 +261,10 @@ expenseForm.addEventListener("submit", async function(event) {
 
 function editExpense(id) {
 
-    const expense = expenses.find(
-        expense => expense.id === id
-    );
+    const expense =
+        expenses.find(
+            expense => expense.id === id
+        );
 
 
     if (!expense) {
@@ -244,6 +272,7 @@ function editExpense(id) {
         alert("Expense not found.");
 
         return;
+
     }
 
 
@@ -253,11 +282,14 @@ function editExpense(id) {
     document.getElementById("amount").value =
         expense.amount;
 
+
     document.getElementById("category").value =
         expense.category;
 
+
     document.getElementById("description").value =
         expense.description || "";
+
 
     document.getElementById("expenseDate").value =
         expense.expense_date;
@@ -266,16 +298,21 @@ function editExpense(id) {
     formTitle.textContent =
         "✏️ Edit Expense";
 
+
     submitButton.textContent =
         "💾 Update Expense";
+
 
     cancelButton.style.display =
         "inline-block";
 
 
     window.scrollTo({
+
         top: 0,
+
         behavior: "smooth"
+
     });
 
 }
@@ -309,8 +346,10 @@ function resetForm() {
     formTitle.textContent =
         "Add New Expense";
 
+
     submitButton.textContent =
         "➕ Add Expense";
+
 
     cancelButton.style.display =
         "none";
@@ -342,12 +381,13 @@ async function deleteExpense(id) {
 
     try {
 
-        const response = await fetch(
-            `${API_URL}/${id}`,
-            {
-                method: "DELETE"
-            }
-        );
+        const response =
+            await fetch(
+                `${API_URL}/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
 
 
         if (!response.ok) {
@@ -367,7 +407,10 @@ async function deleteExpense(id) {
         await loadExpenses();
 
 
-    } catch (error) {
+    }
+
+
+    catch (error) {
 
         console.error(error);
 
@@ -386,8 +429,19 @@ async function deleteExpense(id) {
 
 function updateSummary() {
 
+    updateFilteredSummary(expenses);
+
+}
+
+
+/* =========================
+   FILTERED SUMMARY
+========================= */
+
+function updateFilteredSummary(data) {
+
     const total =
-        expenses.reduce(
+        data.reduce(
             (sum, expense) =>
                 sum + Number(expense.amount),
             0
@@ -395,7 +449,7 @@ function updateSummary() {
 
 
     const count =
-        expenses.length;
+        data.length;
 
 
     const average =
@@ -419,46 +473,148 @@ function updateSummary() {
 
 
 /* =========================
-   SEARCH
+   SEARCH + FILTER
+========================= */
+
+function applyFilters() {
+
+    const searchTerm =
+        searchInput.value
+            .toLowerCase()
+            .trim();
+
+
+    const selectedCategory =
+        categoryFilter.value;
+
+
+    const selectedMonth =
+        monthFilter.value;
+
+
+    const filteredExpenses =
+        expenses.filter(expense => {
+
+
+            /* =========================
+               SEARCH
+            ========================= */
+
+            const matchesSearch =
+
+                expense.category
+                    .toLowerCase()
+                    .includes(searchTerm)
+
+                ||
+
+                (expense.description || "")
+                    .toLowerCase()
+                    .includes(searchTerm)
+
+                ||
+
+                expense.expense_date
+                    .toLowerCase()
+                    .includes(searchTerm);
+
+
+            /* =========================
+               CATEGORY
+            ========================= */
+
+            const matchesCategory =
+
+                selectedCategory === ""
+
+                ||
+
+                expense.category ===
+                selectedCategory;
+
+
+            /* =========================
+               MONTH
+            ========================= */
+
+            const matchesMonth =
+
+                selectedMonth === ""
+
+                ||
+
+                expense.expense_date
+                    .startsWith(selectedMonth);
+
+
+            return (
+
+                matchesSearch &&
+
+                matchesCategory &&
+
+                matchesMonth
+
+            );
+
+        });
+
+
+    displayExpenses(filteredExpenses);
+
+    updateFilteredSummary(filteredExpenses);
+
+}
+
+
+/* =========================
+   SEARCH EVENT
 ========================= */
 
 searchInput.addEventListener(
     "input",
+    applyFilters
+);
+
+
+/* =========================
+   CATEGORY EVENT
+========================= */
+
+categoryFilter.addEventListener(
+    "change",
+    applyFilters
+);
+
+
+/* =========================
+   MONTH EVENT
+========================= */
+
+monthFilter.addEventListener(
+    "change",
+    applyFilters
+);
+
+
+/* =========================
+   CLEAR FILTERS
+========================= */
+
+clearFilters.addEventListener(
+    "click",
     function() {
 
-        const searchTerm =
-            searchInput.value.toLowerCase();
+        searchInput.value = "";
+
+        categoryFilter.value = "";
+
+        monthFilter.value = "";
 
 
-        const filteredExpenses =
-            expenses.filter(expense => {
+        displayExpenses(expenses);
 
-                return (
-
-                    expense.category
-                        .toLowerCase()
-                        .includes(searchTerm)
-
-                    ||
-
-                    (expense.description || "")
-                        .toLowerCase()
-                        .includes(searchTerm)
-
-                    ||
-
-                    expense.expense_date
-                        .toLowerCase()
-                        .includes(searchTerm)
-
-                );
-
-            });
-
-
-        displayExpenses(
-            filteredExpenses
-        );
+        updateSummary();
 
     }
 );
