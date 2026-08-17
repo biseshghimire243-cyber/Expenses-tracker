@@ -1,306 +1,696 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Expense Tracker</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <div class="container">
-
-        <header>
-            <div>
-                <h1>💰 Expense Tracker</h1>
-                <p>Manage your daily expenses easily</p>
-            </div>
-        </header>
-
-        <!-- Summary Cards -->
-        <section class="summary">
-
-            <div class="card">
-                <h3>Total Expenses</h3>
-                <h2 id="totalExpenses">Rs. 0.00</h2>
-            </div>
-
-            <div class="card">
-                <h3>Total Transactions</h3>
-                <h2 id="totalTransactions">0</h2>
-            </div>
-
-            <div class="card">
-                <h3>Average Expense</h3>
-                <h2 id="averageExpense">Rs. 0.00</h2>
-            </div>
-
-        </section>
+<div class="container">
 
 
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-        <section class="budget-section">
+    <header>
 
-    <div class="budget-header">
-        <h2>💰 Monthly Budget</h2>
-        <p>Set a spending limit for the month.</p>
-    </div>
+        <div>
 
-    <div class="budget-form">
+            <h1>💰 Expense Tracker</h1>
 
-        <input
-            type="number"
-            id="budgetInput"
-            placeholder="Enter monthly budget"
-            min="0"
-            step="0.01"
-        >
-
-        <button
-            type="button"
-            id="setBudgetButton"
-        >
-            💾 Set Budget
-        </button>
-
-    </div>
-
-    <div class="budget-info">
-
-        <div class="budget-card">
-            <h3>💰 Budget</h3>
-            <p id="budgetAmount">Rs. 0.00</p>
-        </div>
-
-        <div class="budget-card">
-            <h3>💸 Spent</h3>
-            <p id="budgetSpent">Rs. 0.00</p>
-        </div>
-
-        <div class="budget-card">
-            <h3>💚 Remaining</h3>
-            <p id="budgetRemaining">Rs. 0.00</p>
-        </div>
-
-        <div class="budget-card">
-            <h3>📊 Usage</h3>
-            <p id="budgetPercentage">0%</p>
-        </div>
-
-    </div>
-
-    <div class="budget-progress">
-
-        <div class="progress-bar">
-
-            <div
-                id="budgetProgress"
-                class="progress"
-            ></div>
+            <p>
+                Manage your daily expenses easily
+            </p>
 
         </div>
 
-    </div>
+    </header>
 
-    <p
-        id="budgetMessage"
-        class="budget-message"
-    ></p>
 
-</section>
+    <!-- =========================
+         SUMMARY
+    ========================== -->
 
-        <!-- Add Expense -->
-        <section class="expense-form">
+    <section class="summary">
 
-    <h2 id="formTitle">Add New Expense</h2>
+        <div class="card">
 
-    <form id="expenseForm">
+            <h3>Total Expenses</h3>
 
-        <div class="form-group">
-            <label for="amount">Amount</label>
+            <h2 id="totalExpenses">
+                Rs. 0.00
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Total Transactions</h3>
+
+            <h2 id="totalTransactions">
+                0
+            </h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Average Expense</h3>
+
+            <h2 id="averageExpense">
+                Rs. 0.00
+            </h2>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         MONTHLY BUDGET
+    ========================== -->
+
+    <section class="budget-section">
+
+        <div class="budget-header">
+
+            <h2>💰 Monthly Budget</h2>
+
+            <p>
+                Set a spending limit for the month.
+            </p>
+
+        </div>
+
+
+        <div class="budget-form">
+
             <input
                 type="number"
-                id="amount"
-                placeholder="Enter amount"
+                id="budgetInput"
+                placeholder="Enter monthly budget"
+                min="0"
                 step="0.01"
-                required
             >
-        </div>
 
-        <div class="form-group">
-            <label for="category">Category</label>
-
-            <select id="category" required>
-                <option value="">Select Category</option>
-                <option value="Food">🍔 Food</option>
-                <option value="Transport">🚗 Transport</option>
-                <option value="Shopping">🛍️ Shopping</option>
-                <option value="Bills">💡 Bills</option>
-                <option value="Entertainment">🎬 Entertainment</option>
-                <option value="Health">🏥 Health</option>
-                <option value="Education">📚 Education</option>
-                <option value="Other">📦 Other</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-
-            <input
-                type="text"
-                id="description"
-                placeholder="Example: Lunch"
-            >
-        </div>
-
-        <div class="form-group">
-            <label for="expenseDate">Date</label>
-
-            <input
-                type="date"
-                id="expenseDate"
-                required
-            >
-        </div>
-
-        <div class="form-buttons">
-
-            <button type="submit" id="submitButton">
-                ➕ Add Expense
-            </button>
 
             <button
                 type="button"
-                id="cancelButton"
-                class="cancel-btn"
-                style="display: none;"
+                id="setBudgetButton"
             >
-                ❌ Cancel
+                💾 Set Budget
             </button>
 
         </div>
 
-    </form>
 
-</section>
+        <div class="budget-info">
 
-<section class="analytics">
 
-    <h2>📊 Expense Analytics</h2>
+            <div class="budget-card">
 
-    <div class="analytics-grid">
+                <h3>💰 Budget</h3>
 
-        <div class="analytics-card">
-            <h3>Category Spending</h3>
-            <canvas id="categoryChart"></canvas>
-        </div>
-
-        <div class="analytics-card">
-            <h3>Monthly Spending</h3>
-            <canvas id="monthlyChart"></canvas>
-        </div>
-
-    </div>
-
-    <div class="insights">
-
-        <div class="insight-card">
-            <h3>🏆 Highest Category</h3>
-            <p id="highestCategory">-</p>
-        </div>
-
-        <div class="insight-card">
-            <h3>💸 Highest Expense</h3>
-            <p id="highestExpense">Rs. 0.00</p>
-        </div>
-
-    </div>
-
-</section>
-
-<canvas id="categoryChart"></canvas>
-<canvas id="monthlyChart"></canvas>
-
-<p id="highestCategory">-</p>
-<p id="highestExpense">Rs. 0.00</p>
-
-        <!-- Expense List -->
-        <section class="expense-list">
-
-            <div class="list-header">
-    <h2>Recent Expenses</h2>
-
-    <div class="filters">
-
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="🔍 Search expenses..."
-        >
-
-        <select id="categoryFilter">
-            <option value="">All Categories</option>
-            <option value="Food">🍔 Food</option>
-            <option value="Transport">🚗 Transport</option>
-            <option value="Shopping">🛍️ Shopping</option>
-            <option value="Bills">💡 Bills</option>
-            <option value="Entertainment">🎬 Entertainment</option>
-            <option value="Health">🏥 Health</option>
-            <option value="Education">📚 Education</option>
-            <option value="Other">📦 Other</option>
-        </select>
-
-        <input
-            type="month"
-            id="monthFilter"
-        >
-
-        <button
-            type="button"
-            id="clearFilters"
-            class="clear-btn"
-        >
-            Clear
-        </button>
-
-    </div>
-</div>
-
-            <div class="table-container">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>Amount</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Date</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="expenseTableBody">
-                    </tbody>
-
-                </table>
+                <p id="budgetAmount">
+                    Rs. 0.00
+                </p>
 
             </div>
 
-            <p id="noExpenses">
-                No expenses found.
-            </p>
 
-        </section>
+            <div class="budget-card">
 
-    </div>
+                <h3>💸 Spent</h3>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <p id="budgetSpent">
+                    Rs. 0.00
+                </p>
 
-    <script src="script.js"></script>
+            </div>
+
+
+            <div class="budget-card">
+
+                <h3>💚 Remaining</h3>
+
+                <p id="budgetRemaining">
+                    Rs. 0.00
+                </p>
+
+            </div>
+
+
+            <div class="budget-card">
+
+                <h3>📊 Usage</h3>
+
+                <p id="budgetPercentage">
+                    0%
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="budget-progress">
+
+            <div class="progress-bar">
+
+                <div
+                    id="budgetProgress"
+                    class="progress"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <p
+            id="budgetMessage"
+            class="budget-message"
+        ></p>
+
+    </section>
+
+
+
+    <!-- =========================
+         ADD EXPENSE
+    ========================== -->
+
+    <section class="expense-form">
+
+        <h2 id="formTitle">
+            Add New Expense
+        </h2>
+
+
+        <form id="expenseForm">
+
+
+            <!-- AMOUNT -->
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    placeholder="Enter amount"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="form-group">
+
+                <label for="category">
+                    Category
+                </label>
+
+
+                <select
+                    id="category"
+                    required
+                >
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option value="Food">
+                        🍔 Food
+                    </option>
+
+                    <option value="Transport">
+                        🚗 Transport
+                    </option>
+
+                    <option value="Shopping">
+                        🛍️ Shopping
+                    </option>
+
+                    <option value="Bills">
+                        💡 Bills
+                    </option>
+
+                    <option value="Entertainment">
+                        🎬 Entertainment
+                    </option>
+
+                    <option value="Health">
+                        🏥 Health
+                    </option>
+
+                    <option value="Education">
+                        📚 Education
+                    </option>
+
+                    <option value="Other">
+                        📦 Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =========================
+                 PAYMENT METHOD
+            ========================== -->
+
+            <div class="form-group">
+
+                <label for="paymentMethod">
+                    Payment Method
+                </label>
+
+
+                <select
+                    id="paymentMethod"
+                    required
+                >
+
+                    <option value="">
+                        Select Payment Method
+                    </option>
+
+                    <option value="Cash">
+                        💵 Cash
+                    </option>
+
+                    <option value="Bank">
+                        🏦 Bank
+                    </option>
+
+                    <option value="Card">
+                        💳 Card
+                    </option>
+
+                    <option value="eSewa">
+                        📱 eSewa
+                    </option>
+
+                    <option value="Khalti">
+                        📱 Khalti
+                    </option>
+
+                    <option value="Other">
+                        💰 Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+
+                <input
+                    type="text"
+                    id="description"
+                    placeholder="Example: Lunch"
+                >
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="form-group">
+
+                <label for="expenseDate">
+                    Date
+                </label>
+
+
+                <input
+                    type="date"
+                    id="expenseDate"
+                    required
+                >
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-buttons">
+
+                <button
+                    type="submit"
+                    id="submitButton"
+                >
+                    ➕ Add Expense
+                </button>
+
+
+                <button
+                    type="button"
+                    id="cancelButton"
+                    class="cancel-btn"
+                    style="display: none;"
+                >
+                    ❌ Cancel
+                </button>
+
+            </div>
+
+
+        </form>
+
+    </section>
+
+
+
+    <!-- =========================
+         ANALYTICS
+    ========================== -->
+
+    <section class="analytics">
+
+        <h2>
+            📊 Expense Analytics
+        </h2>
+
+
+        <div class="analytics-grid">
+
+
+            <div class="analytics-card">
+
+                <h3>
+                    Category Spending
+                </h3>
+
+                <canvas
+                    id="categoryChart"
+                ></canvas>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <h3>
+                    Monthly Spending
+                </h3>
+
+                <canvas
+                    id="monthlyChart"
+                ></canvas>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="insights">
+
+
+            <div class="insight-card">
+
+                <h3>
+                    🏆 Highest Category
+                </h3>
+
+                <p id="highestCategory">
+                    -
+                </p>
+
+            </div>
+
+
+            <div class="insight-card">
+
+                <h3>
+                    💸 Highest Expense
+                </h3>
+
+                <p id="highestExpense">
+                    Rs. 0.00
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         EXPENSE LIST
+    ========================== -->
+
+    <section class="expense-list">
+
+
+        <div class="list-header">
+
+            <h2>
+                Recent Expenses
+            </h2>
+
+
+            <div class="filters">
+
+
+                <!-- SEARCH -->
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="🔍 Search expenses..."
+                >
+
+
+                <!-- CATEGORY FILTER -->
+
+                <select
+                    id="categoryFilter"
+                >
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    <option value="Food">
+                        🍔 Food
+                    </option>
+
+                    <option value="Transport">
+                        🚗 Transport
+                    </option>
+
+                    <option value="Shopping">
+                        🛍️ Shopping
+                    </option>
+
+                    <option value="Bills">
+                        💡 Bills
+                    </option>
+
+                    <option value="Entertainment">
+                        🎬 Entertainment
+                    </option>
+
+                    <option value="Health">
+                        🏥 Health
+                    </option>
+
+                    <option value="Education">
+                        📚 Education
+                    </option>
+
+                    <option value="Other">
+                        📦 Other
+                    </option>
+
+                </select>
+
+
+                <!-- PAYMENT FILTER -->
+
+                <select
+                    id="paymentFilter"
+                >
+
+                    <option value="">
+                        All Payment Methods
+                    </option>
+
+                    <option value="Cash">
+                        💵 Cash
+                    </option>
+
+                    <option value="Bank">
+                        🏦 Bank
+                    </option>
+
+                    <option value="Card">
+                        💳 Card
+                    </option>
+
+                    <option value="eSewa">
+                        📱 eSewa
+                    </option>
+
+                    <option value="Khalti">
+                        📱 Khalti
+                    </option>
+
+                    <option value="Other">
+                        💰 Other
+                    </option>
+
+                </select>
+
+
+                <!-- MONTH -->
+
+                <input
+                    type="month"
+                    id="monthFilter"
+                >
+
+
+                <!-- CLEAR -->
+
+                <button
+                    type="button"
+                    id="clearFilters"
+                    class="clear-btn"
+                >
+                    Clear
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             TABLE
+        ========================== -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Amount
+                        </th>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Payment
+                        </th>
+
+                        <th>
+                            Description
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody
+                    id="expenseTableBody"
+                >
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <p id="noExpenses">
+            No expenses found.
+        </p>
+
+
+    </section>
+
+
+</div>
+
+
+
+<!-- =========================
+     CHART.JS
+========================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/chart.js"
+></script>
+
+
+<!-- =========================
+     APPLICATION JAVASCRIPT
+========================== -->
+
+<script
+    src="script.js"
+></script>
+
 
 </body>
+
 </html>
