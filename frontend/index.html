@@ -40,6 +40,78 @@
 
         </section>
 
+
+
+        <section class="budget-section">
+
+    <div class="budget-header">
+        <h2>💰 Monthly Budget</h2>
+        <p>Set a spending limit for the month.</p>
+    </div>
+
+    <div class="budget-form">
+
+        <input
+            type="number"
+            id="budgetInput"
+            placeholder="Enter monthly budget"
+            min="0"
+            step="0.01"
+        >
+
+        <button
+            type="button"
+            id="setBudgetButton"
+        >
+            💾 Set Budget
+        </button>
+
+    </div>
+
+    <div class="budget-info">
+
+        <div class="budget-card">
+            <h3>💰 Budget</h3>
+            <p id="budgetAmount">Rs. 0.00</p>
+        </div>
+
+        <div class="budget-card">
+            <h3>💸 Spent</h3>
+            <p id="budgetSpent">Rs. 0.00</p>
+        </div>
+
+        <div class="budget-card">
+            <h3>💚 Remaining</h3>
+            <p id="budgetRemaining">Rs. 0.00</p>
+        </div>
+
+        <div class="budget-card">
+            <h3>📊 Usage</h3>
+            <p id="budgetPercentage">0%</p>
+        </div>
+
+    </div>
+
+    <div class="budget-progress">
+
+        <div class="progress-bar">
+
+            <div
+                id="budgetProgress"
+                class="progress"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <p
+        id="budgetMessage"
+        class="budget-message"
+    ></p>
+
+</section>
+
         <!-- Add Expense -->
         <section class="expense-form">
 
