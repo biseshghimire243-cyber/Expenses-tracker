@@ -16,8 +16,13 @@ def home():
     })
 
 
+# =========================
+# GET ALL EXPENSES
+# =========================
+
 @app.route("/api/expenses", methods=["GET"])
 def get_expenses():
+
     connection = get_db_connection()
 
     expenses = connection.execute(
@@ -26,17 +31,26 @@ def get_expenses():
 
     connection.close()
 
-    return jsonify([dict(expense) for expense in expenses])
+    return jsonify([
+        dict(expense)
+        for expense in expenses
+    ])
 
+
+# =========================
+# ADD EXPENSE
+# =========================
 
 @app.route("/api/expenses", methods=["POST"])
 def add_expense():
+
     data = request.get_json()
 
     amount = data.get("amount")
     category = data.get("category")
     description = data.get("description", "")
     expense_date = data.get("expense_date")
+    payment_method = data.get("payment_method", "Cash")
 
     if not amount or not category or not expense_date:
         return jsonify({
@@ -48,10 +62,22 @@ def add_expense():
     cursor = connection.execute(
         """
         INSERT INTO expenses
-        (amount, category, description, expense_date)
-        VALUES (?, ?, ?, ?)
+        (
+            amount,
+            category,
+            description,
+            expense_date,
+            payment_method
+        )
+        VALUES (?, ?, ?, ?, ?)
         """,
-        (amount, category, description, expense_date)
+        (
+            amount,
+            category,
+            description,
+            expense_date,
+            payment_method
+        )
     )
 
     connection.commit()
@@ -66,8 +92,16 @@ def add_expense():
     }), 201
 
 
-@app.route("/api/expenses/<int:expense_id>", methods=["DELETE"])
+# =========================
+# DELETE EXPENSE
+# =========================
+
+@app.route(
+    "/api/expenses/<int:expense_id>",
+    methods=["DELETE"]
+)
 def delete_expense(expense_id):
+
     connection = get_db_connection()
 
     cursor = connection.execute(
@@ -91,14 +125,23 @@ def delete_expense(expense_id):
     })
 
 
-@app.route("/api/expenses/<int:expense_id>", methods=["PUT"])
+# =========================
+# UPDATE EXPENSE
+# =========================
+
+@app.route(
+    "/api/expenses/<int:expense_id>",
+    methods=["PUT"]
+)
 def update_expense(expense_id):
+
     data = request.get_json()
 
     amount = data.get("amount")
     category = data.get("category")
     description = data.get("description", "")
     expense_date = data.get("expense_date")
+    payment_method = data.get("payment_method", "Cash")
 
     if not amount or not category or not expense_date:
         return jsonify({
@@ -110,10 +153,14 @@ def update_expense(expense_id):
     cursor = connection.execute(
         """
         UPDATE expenses
-        SET amount = ?,
+
+        SET
+            amount = ?,
             category = ?,
             description = ?,
-            expense_date = ?
+            expense_date = ?,
+            payment_method = ?
+
         WHERE id = ?
         """,
         (
@@ -121,6 +168,7 @@ def update_expense(expense_id):
             category,
             description,
             expense_date,
+            payment_method,
             expense_id
         )
     )
@@ -141,5 +189,12 @@ def update_expense(expense_id):
     })
 
 
+# =========================
+# START SERVER
+# =========================
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(
+        debug=True,
+        port=5000
+    )
