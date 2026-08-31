@@ -13,7 +13,10 @@ def initialize_database():
 
     connection = get_db_connection()
 
-    # Create the table if it doesn't exist
+    # =========================
+    # EXPENSES TABLE
+    # =========================
+
     connection.execute("""
         CREATE TABLE IF NOT EXISTS expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,23 +28,23 @@ def initialize_database():
         )
     """)
 
-    # Check existing columns
-    columns = connection.execute(
-        "PRAGMA table_info(expenses)"
-    ).fetchall()
 
-    column_names = [
-        column["name"]
-        for column in columns
-    ]
+    # =========================
+    # SAVINGS GOALS TABLE
+    # =========================
 
-    # Add payment_method to an existing database
-    if "payment_method" not in column_names:
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS savings_goals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            goal_name TEXT NOT NULL,
+            target_amount REAL NOT NULL,
+            saved_amount REAL DEFAULT 0,
+            target_date TEXT,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
 
-        connection.execute("""
-            ALTER TABLE expenses
-            ADD COLUMN payment_method TEXT DEFAULT 'Cash'
-        """)
 
     connection.commit()
+
     connection.close()
